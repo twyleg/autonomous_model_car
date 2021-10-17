@@ -1,0 +1,14 @@
+Vector2 analog_stick_left
+Vector2 analog_stick_right
+uint8 button_l1
+uint8 button_l2
+uint8 button_r1
+uint8 button_r2
+uint8 button_cross
+uint8 button_square
+uint8 button_triangle
+uint8 button_circle
+uint8 cross_up
+uint8 cross_down
+uint8 cross_left
+uint8 cross_right

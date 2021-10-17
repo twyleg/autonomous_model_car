@@ -1189,7 +1189,7 @@
             </ray>
             <plugin name='gazebo_ros_range_controller' filename='libgazebo_ros_ray_sensor.so'>
               <ros>
-                <namespace>/ultrasound</namespace>
+                <namespace>/primary_vehicle/ultrasound</namespace>
                 <argument>~/out:=range</argument>
               </ros>
               <output_type>sensor_msgs/Range</output_type>
@@ -1539,9 +1539,7 @@
       <allow_auto_disable>1</allow_auto_disable>
       <plugin name='ackermann_drive' filename='libgazebo_ros_ackermann_drive.so'>
         <ros>
-          <namespace>primary_vehicle_control</namespace>
-          <remapping>odom:=odom_demo</remapping>
-          <remapping>distance:=distance_demo</remapping>
+          <namespace>primary_vehicle</namespace>
         </ros>
         <update_rate>100.0</update_rate>
         <front_left_joint>front_left_combined_joint</front_left_joint>
@@ -2275,9 +2273,7 @@
       <allow_auto_disable>1</allow_auto_disable>
       <plugin name='ackermann_drive' filename='libgazebo_ros_ackermann_drive.so'>
         <ros>
-          <namespace>secondary_vehicle_control</namespace>
-          <remapping>odom:=odom_demo</remapping>
-          <remapping>distance:=distance_demo</remapping>
+          <namespace>secondary_vehicle</namespace>
         </ros>
         <update_rate>100.0</update_rate>
         <front_left_joint>front_left_combined_joint</front_left_joint>
