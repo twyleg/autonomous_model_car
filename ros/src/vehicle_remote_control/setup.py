@@ -15,8 +15,8 @@ setup(
 	zip_safe=True,
 	maintainer='twyleg',
 	maintainer_email='mail@twyleg.de',
-	description='TODO: Package description',
-	license='TODO: License declaration',
+	description='Vehicle remote control for Sony DualShock 3 controller and gazebo ackermann vehicle model',
+	license='GPL-3.0',
 	tests_require=['pytest'],
 	entry_points={
 		'console_scripts': [

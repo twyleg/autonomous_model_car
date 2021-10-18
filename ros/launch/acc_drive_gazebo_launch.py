@@ -6,9 +6,6 @@ def generate_launch_description():
 		Node(
 			package='sony_dualshock_three_controller_publisher',
 			executable='sony_dualshock_three_controller_publisher',
-			name='sony_dualshock_three_controller_publisher',
-			output='screen',
-			emulate_tty=True,
 			parameters=[
 				{'controller_hidraw_device_path': '/dev/sony_dualshockthree'}
 			],
@@ -20,8 +17,6 @@ def generate_launch_description():
 			package='vehicle_remote_control',
 			executable='vehicle_remote_control',
 			name='secondary_vehicle_remote_control',
-			output='screen',
-			emulate_tty=True,
 			remappings=[
 				('/vehicle_remote_control/input/SonyDualShockThreeControllerInput', '/secondary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInput'),
 				('/vehicle_remote_control/output/cmd_vel', '/secondary_vehicle/cmd_vel'),
@@ -29,10 +24,14 @@ def generate_launch_description():
 		),
 		Node(
 			package='vehicle_abstraction_layer',
-			executable='vehicle_abstraction_layer_virtual'
+			executable='vehicle_abstraction_layer_gazebo'
 		),
 		Node(
 			package='environment_recognition',
 			executable='environment_recognition'
+		),
+		Node(
+			package='drive_strategies',
+			executable='acc',
 		),
 	])

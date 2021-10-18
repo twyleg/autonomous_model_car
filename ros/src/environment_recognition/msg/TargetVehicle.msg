@@ -1,4 +1,0 @@
-bool available
-float32 distance
-float32 absolute_velocity
-float32 relative_velocity

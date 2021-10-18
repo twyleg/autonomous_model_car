@@ -2,10 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>environment_recognition</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <version>0.0.1</version>
+  <description>Environment recognition nodes</description>
   <maintainer email="mail@twyleg.de">twyleg</maintainer>
-  <license>TODO: License declaration</license>
+  <license>GPL-3.0</license>
 
   <depend>environment_recognition_interfaces</depend>
   <depend>vehicle_abstraction_layer_interfaces</depend>

@@ -1,4 +1,4 @@
-
+// Copyright (C) 2021 twyleg
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/float64.hpp"
@@ -44,9 +44,10 @@ private:
 		if (mLastUltrasoundDistance == std::nullopt) {
 			mLastUltrasoundDistance = std::make_pair(now, ultrasoundDistance);
 			targetVehicle.set__available(false);
-		} else if (mVehicleState == std::nullopt) {
-			targetVehicle.set__available(false);
 		} else if (ultrasoundDistance > 40.0) {
+			targetVehicle.set__available(false);
+			mLastUltrasoundDistance = std::nullopt;
+		} else if (mVehicleState == std::nullopt) {
 			targetVehicle.set__available(false);
 		} else {
 			const std::chrono::duration<double> dTime = now - mLastUltrasoundDistance->first;
@@ -55,18 +56,12 @@ private:
 			const float targetRelativeVelocity = dDistance / dTime.count();
 			const float targetAbsoluteVelocity = targetRelativeVelocity + ownVelocity;
 
-			RCLCPP_INFO(this->get_logger(), "ultrasoundDistance: '%f'", ultrasoundDistance);
-			RCLCPP_INFO(this->get_logger(), "dTime '%f'", dTime.count());
-			RCLCPP_INFO(this->get_logger(), "dDistance: '%f'", dDistance);
-			RCLCPP_INFO(this->get_logger(), "rel v: '%f'", targetRelativeVelocity);
-			RCLCPP_INFO(this->get_logger(), "abs v: '%f'", targetAbsoluteVelocity);
-
-			mLastUltrasoundDistance = std::make_pair(now, ultrasoundDistance);
-
 			targetVehicle.set__absolute_velocity(targetAbsoluteVelocity);
 			targetVehicle.set__relative_velocity(targetRelativeVelocity);
 			targetVehicle.set__distance(ultrasoundDistance);
 			targetVehicle.set__available(true);
+
+			mLastUltrasoundDistance = std::make_pair(now, ultrasoundDistance);
 		}
 
 		mTargetVehiclePublisher->publish(targetVehicle);

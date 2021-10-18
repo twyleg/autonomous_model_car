@@ -1,3 +1,4 @@
+# Copyright (C) 2021 twyleg
 import rclpy
 from rclpy.node import Node
 

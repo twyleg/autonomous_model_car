@@ -58,7 +58,7 @@ private:
 	void driveControlCallback(const vehicle_abstraction_layer_interfaces::msg::DriveControl::SharedPtr msg) {
 		auto twist = geometry_msgs::msg::Twist();
 		twist.linear.set__x(msg->target_velocity);
-		twist.angular.set__y(msg->target_steering_angle);
+		twist.angular.set__z(msg->target_yaw_rate);
 		mDriveControlPublisher->publish(twist);
 	}
 
@@ -90,24 +90,23 @@ private:
 	float mUltrasoundSensorDistance;
 	nav_msgs::msg::Odometry mOdometry;
 
-	// From Gazebo
+	// From Gazebo to vehicle_abstraction_layer
 	rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr mUltrasoundSensorSubscription;
 	rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr mOdometrySubscription;
 	rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr mDistanceSubscription;
-	// To Gazebo
+	// From vehicle_abstraction_layer to Gazebo
 	rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr mDriveControlPublisher;
 
-	// From drive strategy
+	// From drive strategy to vehicle_abstraction_layer
 	rclcpp::Subscription<vehicle_abstraction_layer_interfaces::msg::DriveControl>::SharedPtr mDriveControlSubscription;
-	// To environment recognition
+	// From vehicle_abstraction_layer to environment recognition
 	rclcpp::Publisher<vehicle_abstraction_layer_interfaces::msg::SensorData>::SharedPtr mSensorDataPublisher;
 	rclcpp::Publisher<vehicle_abstraction_layer_interfaces::msg::VehicleState>::SharedPtr mVehicleStatePublisher;
-
 
 	rclcpp::TimerBase::SharedPtr mTimer;
 };
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 	rclcpp::init(argc, argv);
 	rclcpp::spin(std::make_shared<VehicleAbstractionLayerVirtual>());
 	rclcpp::shutdown();
