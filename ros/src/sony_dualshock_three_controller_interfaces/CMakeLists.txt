@@ -10,7 +10,9 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 	"msg/Vector2.msg"
-	"msg/SonyDualShockThreeControllerInput.msg"
+	"msg/Vector2f.msg"
+	"msg/SonyDualShockThreeControllerInputRaw.msg"
+	"msg/SonyDualShockThreeControllerInputPercentage.msg"
 )
 
 ament_package()

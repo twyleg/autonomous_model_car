@@ -10,7 +10,7 @@ def generate_launch_description():
 				{'controller_hidraw_device_path': '/dev/sony_dualshockthree'}
 			],
 			remappings=[
-				('/hid/SonyDualShockThreeControllerInput', '/primary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInput'),
+				('/hid/SonyDualShockThreeControllerInputPercentage', '/primary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInputPercentage'),
 			]
 		),
 		Node(
@@ -18,7 +18,7 @@ def generate_launch_description():
 			executable='vehicle_remote_control',
 			name='secondary_vehicle_remote_control',
 			remappings=[
-				('/vehicle_remote_control/input/SonyDualShockThreeControllerInput', '/secondary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInput'),
+				('/vehicle_remote_control/input/SonyDualShockThreeControllerInputPercentage', '/secondary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInputPercentage'),
 				('/vehicle_remote_control/output/cmd_vel', '/secondary_vehicle/cmd_vel'),
 			]
 		),

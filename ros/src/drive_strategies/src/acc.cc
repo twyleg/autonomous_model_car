@@ -6,7 +6,7 @@
 #include "vehicle_abstraction_layer_interfaces/msg/drive_control.hpp"
 #include "vehicle_abstraction_layer_interfaces/msg/vehicle_state.hpp"
 #include "environment_recognition_interfaces/msg/target_vehicle.hpp"
-#include "sony_dualshock_three_controller_interfaces/msg/sony_dual_shock_three_controller_input.hpp"
+#include "sony_dualshock_three_controller_interfaces/msg/sony_dual_shock_three_controller_input_percentage.hpp"
 
 #include <memory>
 #include <optional>
@@ -29,8 +29,8 @@ public:
 		this->declare_parameter<double>("gap_closing_time", 1.0);
 
 
-		mRemoteControlSubscription = this->create_subscription<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInput>(
-				"/primary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInput", 10, std::bind(&Acc::remoteControlCallback, this, _1));
+		mRemoteControlSubscription = this->create_subscription<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInputPercentage>(
+				"/primary_vehicle/vehicle_remote_control/input/SonyDualShockThreeControllerInputPercentage", 10, std::bind(&Acc::remoteControlCallback, this, _1));
 
 		mVehicleStateSubscription = this->create_subscription<vehicle_abstraction_layer_interfaces::msg::VehicleState>(
 				"/vehicle_abstraction_layer/output/vehicle_state", 10, std::bind(&Acc::vehicleStateCallback, this, _1));
@@ -54,21 +54,21 @@ private:
 	}
 
 	void determineAccState() {
-		if (!mAccEnabled && mRemoteControlInput->button_cross > 25) {
+		if (!mAccEnabled && mRemoteControlInput->button_cross > 0.25) {
 			mAccEnabled = true;
 			RCLCPP_INFO(this->get_logger(), "Acc state: enabled");
-		} else if (mAccEnabled && mRemoteControlInput->button_circle > 25) {
+		} else if (mAccEnabled && mRemoteControlInput->button_circle > 0.25) {
 			mAccEnabled = false;
 			RCLCPP_INFO(this->get_logger(), "Acc state: disabled");
 		}
 	}
 
 	double calculateTargetYawRateFromRemoteControl() {
-		return 0.6458 * (-mRemoteControlInput->analog_stick_left.x / 128.0);
+		return 0.6458 * -mRemoteControlInput->analog_stick_left.x;
 	}
 
 	double calculateTargetVelocityFromRemoteControl() {
-		return  20.0 * -mRemoteControlInput->analog_stick_right.y / 128.0;
+		return  20.0 * -mRemoteControlInput->analog_stick_right.y;
 	}
 
 	void timerCallback() {
@@ -95,7 +95,7 @@ private:
 
 	}
 
-	void remoteControlCallback(const sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInput::SharedPtr msg) {
+	void remoteControlCallback(const sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInputPercentage::SharedPtr msg) {
 		mRemoteControlInput = *msg;
 		determineAccState();
 	}
@@ -108,7 +108,7 @@ private:
 		mTargetVehicle = *msg;
 	}
 
-	rclcpp::Subscription<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInput>::SharedPtr mRemoteControlSubscription;
+	rclcpp::Subscription<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInputPercentage>::SharedPtr mRemoteControlSubscription;
 	rclcpp::Subscription<vehicle_abstraction_layer_interfaces::msg::VehicleState>::SharedPtr mVehicleStateSubscription;
 	rclcpp::Subscription<environment_recognition_interfaces::msg::TargetVehicle>::SharedPtr mTargetVehicleSubscription;
 
@@ -119,7 +119,7 @@ private:
 
 	bool mAccEnabled = false;
 	std::optional<vehicle_abstraction_layer_interfaces::msg::VehicleState> mVehicleState;
-	std::optional<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInput> mRemoteControlInput;
+	std::optional<sony_dualshock_three_controller_interfaces::msg::SonyDualShockThreeControllerInputPercentage> mRemoteControlInput;
 	std::optional<environment_recognition_interfaces::msg::TargetVehicle> mTargetVehicle;
 };
 

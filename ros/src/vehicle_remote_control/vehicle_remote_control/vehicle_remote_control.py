@@ -3,15 +3,15 @@ import rclpy
 from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
-from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInput
+from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInputPercentage
 
 class VehicleRemoteControl(Node):
 
 	def __init__(self):
 		super().__init__('vehicle_remote_control')
 		self.subscription = self.create_subscription(
-			SonyDualShockThreeControllerInput,
-			'/vehicle_remote_control/input/SonyDualShockThreeControllerInput',
+			SonyDualShockThreeControllerInputPercentage,
+			'/vehicle_remote_control/input/SonyDualShockThreeControllerInputPercentage',
 			self.listener_callback,
 			10)
 		self.subscription  # prevent unused variable warning
@@ -20,8 +20,8 @@ class VehicleRemoteControl(Node):
 
 	def listener_callback(self, msg):
 		twist = Twist()
-		twist.linear.x = 20.0 * (-msg.analog_stick_right.y / 128.0)
-		twist.angular.z = 0.6458 * (-msg.analog_stick_left.x / 128.0)
+		twist.linear.x = 20.0 * (-msg.analog_stick_right.y)
+		twist.angular.z = 0.6458 * (-msg.analog_stick_left.x)
 		self.publisher.publish(twist)
 
 

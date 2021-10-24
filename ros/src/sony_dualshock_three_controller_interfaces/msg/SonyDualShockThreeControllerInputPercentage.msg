@@ -1,0 +1,14 @@
+Vector2f analog_stick_left
+Vector2f analog_stick_right
+float32 button_l1
+float32 button_l2
+float32 button_r1
+float32 button_r2
+float32 button_cross
+float32 button_square
+float32 button_triangle
+float32 button_circle
+float32 cross_up
+float32 cross_down
+float32 cross_left
+float32 cross_right

@@ -1,111 +1,173 @@
 # Copyright (C) 2021 twyleg
 import rclpy
+from typing import BinaryIO, AnyStr, Optional
 from rclpy.node import Node
+from rclpy.publisher import Publisher
+from rclpy.timer import Timer
+from os import set_blocking
+from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInputRaw
+from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInputPercentage
 
-from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInput
 
 class SonyDualShockThreeController(object):
+	hidraw_file_path: str
+	hidraw_file: BinaryIO
+	data: Optional[AnyStr]
 
-	def __init__(self, hidrawFilePath):
-		self.hidrawFilePath = hidrawFilePath
-		self.hidrawFile = open(self.hidrawFilePath, 'rb')
+	def __init__(self, hidraw_file_path: str) -> None:
+		self.hidraw_file_path = hidraw_file_path
+		self.hidraw_file = open(self.hidraw_file_path, 'rb')
+		set_blocking(self.hidraw_file.fileno(), False)
 		self.data = None
 
-	def read_data(self):
-		self.data = self.hidrawFile.read(49)
+	def read_data(self) -> None:
+		while True:
+			data = self.hidraw_file.read(49)
+			if data is not None:
+				self.data = data
+			else:
+				break
 
-	def get_analog_stick_left_x(self):
+	def get_analog_stick_left_x(self) -> int:
 		return self.data[6]
 
-	def get_analog_stick_left_y(self):
+	def get_analog_stick_left_y(self) -> int:
 		return self.data[7]
 
-	def get_analog_stick_right_x(self):
+	def get_analog_stick_right_x(self) -> int:
 		return self.data[8]
 
-	def get_analog_stick_right_y(self):
+	def get_analog_stick_right_y(self) -> int:
 		return self.data[9]
 
-	def get_button_l1(self):
+	def get_button_l1(self) -> int:
 		return self.data[20]
 
-	def get_button_l2(self):
+	def get_button_l2(self) -> int:
 		return self.data[18]
 
-	def get_button_r1(self):
+	def get_button_r1(self) -> int:
 		return self.data[21]
 
-	def get_button_r2(self):
+	def get_button_r2(self) -> int:
 		return self.data[19]
 
-	def get_button_cross(self):
+	def get_button_cross(self) -> int:
 		return self.data[24]
 
-	def get_button_square(self):
+	def get_button_square(self) -> int:
 		return self.data[25]
 
-	def get_button_triangle(self):
+	def get_button_triangle(self) -> int:
 		return self.data[22]
 
-	def get_button_circle(self):
+	def get_button_circle(self) -> int:
 		return self.data[23]
 
-	def get_cross_up(self):
+	def get_cross_up(self) -> int:
 		return self.data[14]
 
-	def get_cross_down(self):
+	def get_cross_down(self) -> int:
 		return self.data[16]
 
-	def get_cross_left(self):
+	def get_cross_left(self) -> int:
 		return self.data[17]
 
-	def get_cross_right(self):
+	def get_cross_right(self) -> int:
 		return self.data[15]
 
+	def data_valid(self) -> bool:
+		return self.data is not None
 
-class Publisher(Node):
 
-	def __init__(self):
+class SonyDualshockThreeControllerPublisher(Node):
+	publisher_raw: Publisher
+	publisher_percentage: Publisher
+	timer: Timer
+	controller: SonyDualShockThreeController
+
+	@staticmethod
+	def apply_analog_stick_offset(input_value: int) -> int:
+		return input_value - 128;
+
+	@staticmethod
+	def analog_stick_value_to_percentage(input_value: int) -> float:
+		return (input_value - 128) / 127.0;
+
+	@staticmethod
+	def button_value_to_percentage(input_value: int) -> float:
+		return input_value / 255.0;
+
+	def __init__(self) -> None:
 		super().__init__('sony_dualshock_three_controller_publisher')
-		self.publisher_ = self.create_publisher(SonyDualShockThreeControllerInput, '/hid/SonyDualShockThreeControllerInput', 10)
 
 		self.declare_parameter('controller_hidraw_device_path', rclpy.Parameter.Type.STRING)
 		controller_hidraw_device_path = self.get_parameter('controller_hidraw_device_path').get_parameter_value().string_value
 
 		self.controller = SonyDualShockThreeController(controller_hidraw_device_path)
 
-	def publish_controller_data_synchronous(self):
+		self.publisher_raw = self.create_publisher(SonyDualShockThreeControllerInputRaw, '/hid/SonyDualShockThreeControllerInputRaw', 10)
+		self.publisher_percentage = self.create_publisher(SonyDualShockThreeControllerInputPercentage, '/hid/SonyDualShockThreeControllerInputPercentage', 10)
+		self.timer = self.create_timer(0.1, self.timer_callback)
 
+	def timer_callback(self) -> None:
 		self.controller.read_data()
-		controllerInput = SonyDualShockThreeControllerInput()
+		if not self.controller.data_valid():
+			return
+		self.publish_controller_input_raw()
+		self.publish_controller_input_percentage()
 
-		controllerInput.analog_stick_left.x = self.controller.get_analog_stick_left_x() - 128
-		controllerInput.analog_stick_left.y = self.controller.get_analog_stick_left_y() - 128
-		controllerInput.analog_stick_right.x = self.controller.get_analog_stick_right_x() - 128
-		controllerInput.analog_stick_right.y = self.controller.get_analog_stick_right_y() - 128
-		controllerInput.button_l1 = self.controller.get_button_l1()
-		controllerInput.button_l2 = self.controller.get_button_l2()
-		controllerInput.button_r1 = self.controller.get_button_r1()
-		controllerInput.button_r2 = self.controller.get_button_r2()
-		controllerInput.button_cross = self.controller.get_button_cross()
-		controllerInput.button_square = self.controller.get_button_square()
-		controllerInput.button_triangle = self.controller.get_button_triangle()
-		controllerInput.button_circle = self.controller.get_button_circle()
-		controllerInput.cross_up = self.controller.get_cross_up()
-		controllerInput.cross_down = self.controller.get_cross_down()
-		controllerInput.cross_left = self.controller.get_cross_left()
-		controllerInput.cross_right = self.controller.get_cross_right()
+	def publish_controller_input_raw(self):
+		controller_input_raw = SonyDualShockThreeControllerInputRaw()
 
-		self.publisher_.publish(controllerInput)
+		controller_input_raw.analog_stick_left.x = self.apply_analog_stick_offset(self.controller.get_analog_stick_left_x())
+		controller_input_raw.analog_stick_left.y = self.apply_analog_stick_offset(self.controller.get_analog_stick_left_y())
+		controller_input_raw.analog_stick_right.x = self.apply_analog_stick_offset(self.controller.get_analog_stick_right_x())
+		controller_input_raw.analog_stick_right.y = self.apply_analog_stick_offset(self.controller.get_analog_stick_right_y())
+		controller_input_raw.button_l1 = self.controller.get_button_l1()
+		controller_input_raw.button_l2 = self.controller.get_button_l2()
+		controller_input_raw.button_r1 = self.controller.get_button_r1()
+		controller_input_raw.button_r2 = self.controller.get_button_r2()
+		controller_input_raw.button_cross = self.controller.get_button_cross()
+		controller_input_raw.button_square = self.controller.get_button_square()
+		controller_input_raw.button_triangle = self.controller.get_button_triangle()
+		controller_input_raw.button_circle = self.controller.get_button_circle()
+		controller_input_raw.cross_up = self.controller.get_cross_up()
+		controller_input_raw.cross_down = self.controller.get_cross_down()
+		controller_input_raw.cross_left = self.controller.get_cross_left()
+		controller_input_raw.cross_right = self.controller.get_cross_right()
+
+		self.publisher_raw.publish(controller_input_raw)
+
+	def publish_controller_input_percentage(self):
+		controller_input_percentage = SonyDualShockThreeControllerInputPercentage()
+
+		controller_input_percentage.analog_stick_left.x = self.analog_stick_value_to_percentage(self.controller.get_analog_stick_left_x())
+		controller_input_percentage.analog_stick_left.y = self.analog_stick_value_to_percentage(self.controller.get_analog_stick_left_y())
+		controller_input_percentage.analog_stick_right.x = self.analog_stick_value_to_percentage(self.controller.get_analog_stick_right_x())
+		controller_input_percentage.analog_stick_right.y = self.analog_stick_value_to_percentage(self.controller.get_analog_stick_right_y())
+		controller_input_percentage.button_l1 = self.button_value_to_percentage(self.controller.get_button_l1())
+		controller_input_percentage.button_l2 = self.button_value_to_percentage(self.controller.get_button_l2())
+		controller_input_percentage.button_r1 = self.button_value_to_percentage(self.controller.get_button_r1())
+		controller_input_percentage.button_r2 = self.button_value_to_percentage(self.controller.get_button_r2())
+		controller_input_percentage.button_cross = self.button_value_to_percentage(self.controller.get_button_cross())
+		controller_input_percentage.button_square = self.button_value_to_percentage(self.controller.get_button_square())
+		controller_input_percentage.button_triangle = self.button_value_to_percentage(self.controller.get_button_triangle())
+		controller_input_percentage.button_circle = self.button_value_to_percentage(self.controller.get_button_circle())
+		controller_input_percentage.cross_up = self.button_value_to_percentage(self.controller.get_cross_up())
+		controller_input_percentage.cross_down = self.button_value_to_percentage(self.controller.get_cross_down())
+		controller_input_percentage.cross_left = self.button_value_to_percentage(self.controller.get_cross_left())
+		controller_input_percentage.cross_right = self.button_value_to_percentage(self.controller.get_cross_right())
+
+		self.publisher_percentage.publish(controller_input_percentage)
 
 
 def main(args=None):
 	rclpy.init(args=args)
 
-	publisher = Publisher()
+	publisher = SonyDualshockThreeControllerPublisher()
 
-	while True:
-		publisher.publish_controller_data_synchronous()
+	rclpy.spin(publisher)
 
 	publisher.destroy_node()
 	rclpy.shutdown()
