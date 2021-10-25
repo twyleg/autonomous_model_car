@@ -25,9 +25,24 @@ ament_target_dependencies(vehicle_abstraction_layer_gazebo
 	vehicle_abstraction_layer_interfaces
 )
 
+add_executable(vehicle_abstraction_layer_can
+	src/vehicle_abstraction_layer_can.cc
+	src/socket_can.h
+	src/socket_can.cc
+)
+
+ament_target_dependencies(vehicle_abstraction_layer_can
+	rclcpp
+	std_msgs
+	sensor_msgs
+	nav_msgs
+	vehicle_abstraction_layer_interfaces
+)
+
 install(
 	TARGETS
 		vehicle_abstraction_layer_gazebo
+		vehicle_abstraction_layer_can
 	DESTINATION
 		lib/${PROJECT_NAME}
 )

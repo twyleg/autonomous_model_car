@@ -29,13 +29,13 @@
      inkscape:guide-bbox="true"
      inkscape:bbox-paths="true"
      inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:zoom="0.77771465"
-     inkscape:cx="234.6619"
-     inkscape:cy="550.33038"
-     inkscape:window-width="2556"
-     inkscape:window-height="1395"
-     inkscape:window-x="2560"
-     inkscape:window-y="1098"
+     inkscape:zoom="1.0998546"
+     inkscape:cx="529.61546"
+     inkscape:cy="420.05552"
+     inkscape:window-width="1916"
+     inkscape:window-height="1035"
+     inkscape:window-x="2988"
+     inkscape:window-y="18"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -292,6 +292,20 @@
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path5692-32-9-1" />
     </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend-2-2-9-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path5692-7-6-4-7" />
+    </marker>
   </defs>
   <g
      inkscape:label="Layer 1"
@@ -327,17 +341,29 @@
        height="36.085197"
        x="154.40097"
        y="86.921577" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:1.5,1.5;paint-order:markers stroke fill;stroke-dashoffset:0"
+       id="rect846-3-7-3"
+       width="36.085007"
+       height="14.41049"
+       x="154.40099"
+       y="61.993122" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="172.0298"
-       y="106.63048"
+       x="172.36708"
+       y="103.48623"
        id="text2538-5"><tspan
          sodipodi:role="line"
          style="text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="172.0298"
-         y="106.63048"
-         id="tspan2540-5">Strategy</tspan></text>
+         x="172.36708"
+         y="103.48623"
+         id="tspan2540-5">Drive</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="172.36708"
+         y="108.77789"
+         id="tspan9500">Strategy</tspan></text>
     <g
        id="g5646-0"
        transform="translate(-14.29445,-30.85398)">
@@ -424,6 +450,54 @@
          style="stroke-width:0.264583"
          x="231.07838"
          y="143.42328">ROS-Message</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#656565;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="201.58528"
+       y="133.08351"
+       id="text16790-3-9"><tspan
+         sodipodi:role="line"
+         id="tspan16788-1-1"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="201.58528"
+         y="133.08351">target yaw-rate</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="201.58528"
+         y="138.37517"
+         id="tspan16866">target velocity</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#656565;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="141.84857"
+       y="133.32742"
+       id="text16790-3-9-2"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="141.84857"
+         y="133.32742"
+         id="tspan16866-0">object-list</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="141.84857"
+         y="138.61908"
+         id="tspan29064">actual velocity</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#656565;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="83.77552"
+       y="133.32742"
+       id="text16790-3-9-2-9"><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="83.77552"
+         y="133.32742"
+         id="tspan29064-6">raw ultrasound distance</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583;fill:#656565;fill-opacity:1"
+         x="83.77552"
+         y="138.61908"
+         id="tspan35458">actual velocity</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -629,20 +703,36 @@
        y="86.921577" />
     <text
        xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="45.891125"
+       y="122.68413"
+       id="text21015-2-3"><tspan
+         sodipodi:role="line"
+         id="tspan21013-5-5"
+         style="font-size:3.52778px;stroke-width:0.264583"
+         x="45.891125"
+         y="122.68413">ROSNode</tspan></text>
+    <text
+       xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="53.968788"
-       y="103.89655"
+       x="54.227165"
+       y="100.8404"
        id="text2538-5-9-2-20-4"><tspan
          sodipodi:role="line"
          style="text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="53.968788"
-         y="103.89655"
+         x="54.227165"
+         y="100.8404"
          id="tspan34206-7">Vehicle</tspan><tspan
          sodipodi:role="line"
          style="text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="53.968788"
-         y="109.18821"
-         id="tspan35378">Interface</tspan></text>
+         x="54.227165"
+         y="106.13206"
+         id="tspan1367">Abstraction</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="54.227165"
+         y="111.42372"
+         id="tspan1507">Layer</tspan></text>
     <rect
        style="fill:#c4f9ff;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;paint-order:markers stroke fill;fill-opacity:1"
        id="rect846-3-7-2-6-9-0-7"
@@ -653,19 +743,24 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="230.12923"
-       y="103.89655"
+       x="230.9247"
+       y="100.8404"
        id="text2538-5-9-2-20-4-2"><tspan
          sodipodi:role="line"
          style="text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="230.12923"
-         y="103.89655"
-         id="tspan34206-7-7">Vehicle</tspan><tspan
+         x="230.9247"
+         y="100.8404"
+         id="tspan35378-2">Vehicle</tspan><tspan
          sodipodi:role="line"
          style="text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="230.12923"
-         y="109.18821"
-         id="tspan35378-2">Interface</tspan></text>
+         x="230.9247"
+         y="106.13206"
+         id="tspan8217">Abstraction</tspan><tspan
+         sodipodi:role="line"
+         style="text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="230.9247"
+         y="111.42372"
+         id="tspan8219">Layer</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -809,5 +904,44 @@
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker-end:url(#Arrow1Mend-2-2-9);paint-order:markers stroke fill"
        d="M 53.994859,48.555057 V 87.299949"
        id="path43174-1-9" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker-end:url(#Arrow1Mend-2-2-9-6);paint-order:markers stroke fill"
+       d="m 172.44348,76.286151 0,9.808655"
+       id="path43174-1-9-5"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="162.00485"
+       y="70.30114"
+       id="text14150"><tspan
+         sodipodi:role="line"
+         id="tspan14148"
+         style="stroke-width:0.264583"
+         x="162.00485"
+         y="70.30114">UserInput</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="222.34502"
+       y="122.67765"
+       id="text21015-2-6"><tspan
+         sodipodi:role="line"
+         id="tspan21013-5-2"
+         style="font-size:3.52778px;stroke-width:0.264583"
+         x="222.34502"
+         y="122.67765">ROSNode</tspan></text>
+    <path
+       style="fill:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:0.6, 0.6;stroke-dashoffset:0;paint-order:markers stroke fill;stroke:#666666;stroke-opacity:1"
+       d="m 83.093159,105.10748 v 23.75818"
+       id="path39585" />
+    <path
+       style="fill:none;stroke:#666666;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:0.6, 0.6;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 143.08177,105.1754 v 23.75818"
+       id="path39585-0" />
+    <path
+       style="fill:none;stroke:#666666;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:0.6, 0.6;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 201.50713,105.1754 v 23.75818"
+       id="path39585-6" />
   </g>
 </svg>

@@ -1,8 +1,5 @@
 // Copyright (C) 2021 twyleg
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
+#include "socket_can.h"
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -14,15 +11,23 @@
 #include "vehicle_abstraction_layer_interfaces/msg/vehicle_state.hpp"
 #include "vehicle_abstraction_layer_interfaces/msg/sensor_data.hpp"
 
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+
+
+
 using std::placeholders::_1;
 
 using namespace std::chrono_literals;
 
-class VehicleAbstractionLayerGazebo : public rclcpp::Node
+class VehicleAbstractionLayerCan : public rclcpp::Node
 {
 public:
-	VehicleAbstractionLayerGazebo() :
-		Node("vehicle_abstraction_layer_gazebo")
+	VehicleAbstractionLayerCan() :
+		Node("vehicle_abstraction_layer_can"),
+		mSocketCAN("vcan0")
 	{
 		mSensorDataPublisher = this->create_publisher<vehicle_abstraction_layer_interfaces::msg::SensorData>(
 				"/vehicle_abstraction_layer/output/sensor_data", 10);
@@ -36,21 +41,21 @@ public:
 
 		mDriveControlSubscription = this->create_subscription<vehicle_abstraction_layer_interfaces::msg::DriveControl>(
 				"/vehicle_abstraction_layer/input/drive_control", rclcpp::SensorDataQoS(),
-				std::bind(&VehicleAbstractionLayerGazebo::driveControlCallback, this, _1));
+				std::bind(&VehicleAbstractionLayerCan::driveControlCallback, this, _1));
 
-		mUltrasoundSensorSubscription = this->create_subscription<sensor_msgs::msg::Range>(
-				"/primary_vehicle/ultrasound/range", rclcpp::SensorDataQoS(),
-				std::bind(&VehicleAbstractionLayerGazebo::ultrasoundSensorCallback, this, _1));
+//		mUltrasoundSensorSubscription = this->create_subscription<sensor_msgs::msg::Range>(
+//				"/primary_vehicle/ultrasound/range", rclcpp::SensorDataQoS(),
+//				std::bind(&VehicleAbstractionLayerCan::ultrasoundSensorCallback, this, _1));
 
-		mOdometrySubscription = this->create_subscription<nav_msgs::msg::Odometry>(
-				"/primary_vehicle/odom", rclcpp::SensorDataQoS(),
-				std::bind(&VehicleAbstractionLayerGazebo::odometryCallback, this, _1));
+//		mOdometrySubscription = this->create_subscription<nav_msgs::msg::Odometry>(
+//				"/primary_vehicle/odom", rclcpp::SensorDataQoS(),
+//				std::bind(&VehicleAbstractionLayerCan::odometryCallback, this, _1));
 
-		mDistanceSubscription = this->create_subscription<std_msgs::msg::Float32>(
-				"/primary_vehicle/distance", rclcpp::SensorDataQoS(),
-				std::bind(&VehicleAbstractionLayerGazebo::distanceCallback, this, _1));
+//		mDistanceSubscription = this->create_subscription<std_msgs::msg::Float32>(
+//				"/primary_vehicle/distance", rclcpp::SensorDataQoS(),
+//				std::bind(&VehicleAbstractionLayerCan::distanceCallback, this, _1));
 
-		mTimer = this->create_wall_timer(100ms, std::bind(&VehicleAbstractionLayerGazebo::timerCallback, this));
+		mTimer = this->create_wall_timer(100ms, std::bind(&VehicleAbstractionLayerCan::timerCallback, this));
 	}
 
 private:
@@ -62,39 +67,31 @@ private:
 		mDriveControlPublisher->publish(twist);
 	}
 
-	void ultrasoundSensorCallback(const sensor_msgs::msg::Range::SharedPtr msg) {
-		mUltrasoundSensorDistance = msg->range;
-	}
-
-	void odometryCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
-		mOdometry = *msg;
-	}
-
-	void distanceCallback(const std_msgs::msg::Float32::SharedPtr msg) {
-		mDistance = msg->data;
-	}
 
 	void timerCallback() {
-		auto sensorData = vehicle_abstraction_layer_interfaces::msg::SensorData();
-		sensorData.set__ultrasound_distance(mUltrasoundSensorDistance);
-		mSensorDataPublisher->publish(sensorData);
+//		auto sensorData = vehicle_abstraction_layer_interfaces::msg::SensorData();
+//		sensorData.set__ultrasound_distance(mUltrasoundSensorDistance);
+//		mSensorDataPublisher->publish(sensorData);
 
 		auto vehicleState = vehicle_abstraction_layer_interfaces::msg::VehicleState();
-		vehicleState.set__distance(mDistance);
-		vehicleState.set__twist(mOdometry.twist.twist);
+//		vehicleState.set__distance(mDistance);
+//		vehicleState.set__twist(mOdometry.twist.twist);
 		mVehicleStatePublisher->publish(vehicleState);
+
+		can_frame canFrame;
+		if (mSocketCAN.read(canFrame)) {
+			RCLCPP_INFO(this->get_logger(), "CAN received");
+			mSocketCAN.write(canFrame);
+		}
 	}
 
+
+	SocketCAN mSocketCAN;
 
 	float mDistance;
 	float mUltrasoundSensorDistance;
 	nav_msgs::msg::Odometry mOdometry;
 
-	// From Gazebo to vehicle_abstraction_layer
-	rclcpp::Subscription<sensor_msgs::msg::Range>::SharedPtr mUltrasoundSensorSubscription;
-	rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr mOdometrySubscription;
-	rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr mDistanceSubscription;
-	// From vehicle_abstraction_layer to Gazebo
 	rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr mDriveControlPublisher;
 
 	// From drive strategy to vehicle_abstraction_layer
@@ -108,7 +105,7 @@ private:
 
 int main(int argc, char* argv[]) {
 	rclcpp::init(argc, argv);
-	rclcpp::spin(std::make_shared<VehicleAbstractionLayerGazebo>());
+	rclcpp::spin(std::make_shared<VehicleAbstractionLayerCan>());
 	rclcpp::shutdown();
 	return 0;
 }

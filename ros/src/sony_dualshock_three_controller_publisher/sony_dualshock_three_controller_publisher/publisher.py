@@ -1,10 +1,11 @@
 # Copyright (C) 2021 twyleg
 import rclpy
+from os import set_blocking
 from typing import BinaryIO, AnyStr, Optional
 from rclpy.node import Node
 from rclpy.publisher import Publisher
 from rclpy.timer import Timer
-from os import set_blocking
+from rcl_interfaces.msg import ParameterDescriptor
 from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInputRaw
 from sony_dualshock_three_controller_interfaces.msg import SonyDualShockThreeControllerInputPercentage
 
@@ -81,6 +82,10 @@ class SonyDualShockThreeController(object):
 
 
 class SonyDualshockThreeControllerPublisher(Node):
+
+	PUBLISHER_RAW_TOPIC = '/hid/SonyDualShockThreeControllerInputRaw'
+	PUBLISHER_PERCENTAGE_TOPIC = '/hid/SonyDualShockThreeControllerInputPercentage'
+
 	publisher_raw: Publisher
 	publisher_percentage: Publisher
 	timer: Timer
@@ -101,21 +106,34 @@ class SonyDualshockThreeControllerPublisher(Node):
 	def __init__(self) -> None:
 		super().__init__('sony_dualshock_three_controller_publisher')
 
-		self.declare_parameter('controller_hidraw_device_path', rclpy.Parameter.Type.STRING)
+		self.publisher_raw = self.create_publisher(SonyDualShockThreeControllerInputRaw,
+												   SonyDualshockThreeControllerPublisher.PUBLISHER_RAW_TOPIC, 10)
+		self.publisher_percentage = self.create_publisher(SonyDualShockThreeControllerInputPercentage,
+														  SonyDualshockThreeControllerPublisher.PUBLISHER_PERCENTAGE_TOPIC,
+														  10)
+
+		controller_hidraw_device_path_parameter_descriptor = ParameterDescriptor(description='Hidraw device path for '
+																							 'Sony Dualshock 3 '
+																							 'controller, e.g. '
+																							 '/dev/hidraw0')
+		self.declare_parameter('controller_hidraw_device_path', rclpy.Parameter.Type.STRING,
+							   controller_hidraw_device_path_parameter_descriptor)
 		controller_hidraw_device_path = self.get_parameter('controller_hidraw_device_path').get_parameter_value().string_value
-
 		self.controller = SonyDualShockThreeController(controller_hidraw_device_path)
+		self.get_logger().info('Using controller with hidraw device path "%s"' % controller_hidraw_device_path)
 
-		self.publisher_raw = self.create_publisher(SonyDualShockThreeControllerInputRaw, '/hid/SonyDualShockThreeControllerInputRaw', 10)
-		self.publisher_percentage = self.create_publisher(SonyDualShockThreeControllerInputPercentage, '/hid/SonyDualShockThreeControllerInputPercentage', 10)
-		self.timer = self.create_timer(0.1, self.timer_callback)
+		publisher_period_parameter_descriptor = ParameterDescriptor(description='The period in seconds with which the '
+																				'controller input will be published')
+		self.declare_parameter('publisher_period', 0.1, publisher_period_parameter_descriptor)
+		publisher_period = self.get_parameter('publisher_period').get_parameter_value().double_value
+		self.timer = self.create_timer(publisher_period, self.timer_callback)
+		self.get_logger().info('Starting to publish with period %fs' % publisher_period)
 
 	def timer_callback(self) -> None:
 		self.controller.read_data()
-		if not self.controller.data_valid():
-			return
-		self.publish_controller_input_raw()
-		self.publish_controller_input_percentage()
+		if self.controller.data_valid():
+			self.publish_controller_input_raw()
+			self.publish_controller_input_percentage()
 
 	def publish_controller_input_raw(self):
 		controller_input_raw = SonyDualShockThreeControllerInputRaw()
