@@ -167,13 +167,13 @@
     
     <gui fullscreen='0'>
     <camera name='user_camera'>
-        <track_visual>
+<!--        <track_visual>
             <name>primary_vehicle</name>
             <static>true</static>
             <use_model_frame>true</use_model_frame>
             <xyz>-10 0 3</xyz>
             <inherit_yaw>true</inherit_yaw>
-        </track_visual>
+        </track_visual>-->
         <pose>0 0 0 0 0 0</pose>
         <view_controller>ortho</view_controller>
         <projection_type>perspective</projection_type>

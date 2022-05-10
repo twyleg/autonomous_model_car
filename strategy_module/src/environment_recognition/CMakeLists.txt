@@ -10,6 +10,7 @@ find_package(rclcpp REQUIRED)
 
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(vehicle_abstraction_layer_interfaces REQUIRED)
 find_package(environment_recognition_interfaces REQUIRED)
 
@@ -21,6 +22,7 @@ ament_target_dependencies(environment_recognition
 	rclcpp
 	std_msgs
 	geometry_msgs
+	visualization_msgs
 	vehicle_abstraction_layer_interfaces
 	environment_recognition_interfaces
 )
